@@ -66,7 +66,6 @@ __END__
  # arguments will be passed to IO::Socket::UNIX, but Listen=>1 and
  # Type=>SOCK_STREAM will be added by default. also, HTTP::Daemon::UNIX will try
  # to delete stale socket first, for convenience.
-
  my $d = HTTP::Daemon::UNIX->new(Local => "/path/to/unix.sock");
 
  # will print something like: "http:path/to/unix.sock"
