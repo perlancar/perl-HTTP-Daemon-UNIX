@@ -50,8 +50,8 @@ sub url {
     $hostpath =~ s!^/!!;
     my $url = $self->_default_scheme . ":" . $hostpath;
 
-    # note: my patched LWP::Protocol::http::SocketUnix requires this syntax
-    # ("//" separates the Unix socket path and URI):
+    # note: my LWP::Protocol::http::SocketUnixAlt requires this syntax ("//"
+    # separates the Unix socket path and URI):
     # http:abs/path/to/unix.sock//uri/path
 }
 
@@ -85,6 +85,17 @@ __END__
      undef($c);
  }
 
+ # client side code, using LWP::Protocol::http::SocketUnixAlt
+ use LWP::Protocol::http::SocketUnixAlt;
+ use LWP::UserAgent;
+ use HTTP::Request::Common;
+
+ my $ua = LWP::UserAgent->new;
+ my $orig_imp = LWP::Protocol::implementor("http");
+ LWP::Protocol::implementor(http => 'LWP::Protocol::http::SocketUnixAlt');
+ my $resp = $ua->request(GET "http:path/to/unix.sock//uri/path");
+ LWP::Protocol::implementor(http => $orig_imp);
+
 
 =head1 DESCRIPTION
 
@@ -100,3 +111,4 @@ extensively, so beware that things might blow up in your face.
 
 L<HTTP::Daemon>
 
+L<LWP::Protocol::http::SocketUnixAlt>
