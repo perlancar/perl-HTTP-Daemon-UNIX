@@ -8,6 +8,8 @@ use IO::Socket::UNIX;
 use HTTP::Daemon;
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
+# VERSION
+
 sub new {
     my ($class, %args) = @_;
     my $sock;
