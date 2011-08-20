@@ -4,8 +4,9 @@ use 5.010;
 use strict;
 use warnings;
 
-use IO::Socket::UNIX;
 use HTTP::Daemon;
+use IO::Handle::Record; # for peercred()
+use IO::Socket::UNIX;
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
 # VERSION
