@@ -7,6 +7,8 @@ use warnings;
 use HTTP::Daemon;
 use IO::Handle::Record; # for peercred()
 use IO::Socket::UNIX;
+use POSIX qw(locale_h);
+
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
 # VERSION
@@ -19,6 +21,8 @@ sub new {
 
     if ($args{Local}) {
         my $path = $args{Local};
+        my $old_locale = setlocale(LC_ALL);
+        setlocale(LC_ALL, "C"); # so that error messages are in English
 
         # probe the Unix socket first, delete if stale
         $sock = IO::Socket::UNIX->new(
@@ -28,15 +32,14 @@ sub new {
         if ($sock) {
             die "Some process is already listening on $path, aborting";
         } elsif ($err =~ /^connect: permission denied/i) {
-            # XXX language dependant
             die "Cannot access $path, aborting";
         } elsif (1) { #$err =~ /^connect: connection refused/i) {
-            # XXX language dependant
             unlink $path;
         } elsif ($err !~ /^connect: no such file/i) {
-            # XXX language dependant
             die "Cannot bind to $path: $err";
         }
+
+        setlocale(LC_ALL, $old_locale);
     }
 
     $args{Listen} //= 1;
