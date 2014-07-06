@@ -10,23 +10,16 @@ use SHARYANTO::IO::Socket::UNIX::Util qw(create_unix_socket);
 
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
+# DATE
 # VERSION
 
 sub new {
     my ($class, %args) = @_;
-    my $sock;
 
     # XXX normalize arg case first
 
-    if ($args{Local}) {
-        create_unix_socket($args{Local});
-    }
-
-    $args{Listen} //= 1;
-    $args{Type}   //= SOCK_STREAM;
-
-    $sock = IO::Socket::UNIX->new(%args);
-    die "Can't bind to Unix socket: $@" unless $sock;
+    my $sock = SHARYANTO::IO::Socket::UNIX::Util::create_unix_socket(
+        $args{Local});
     bless $sock, $class;
 }
 
