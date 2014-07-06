@@ -6,8 +6,7 @@ use warnings;
 
 use HTTP::Daemon;
 use IO::Handle::Record; # for peercred()
-use IO::Socket::UNIX;
-use POSIX qw(locale_h);
+use SHARYANTO::IO::Socket::UNIX::Util qw(create_unix_socket);
 
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
@@ -20,26 +19,7 @@ sub new {
     # XXX normalize arg case first
 
     if ($args{Local}) {
-        my $path = $args{Local};
-        my $old_locale = setlocale(LC_ALL);
-        setlocale(LC_ALL, "C"); # so that error messages are in English
-
-        # probe the Unix socket first, delete if stale
-        $sock = IO::Socket::UNIX->new(
-            Type=>SOCK_STREAM,
-            Peer=>$path);
-        my $err = $@ unless $sock;
-        if ($sock) {
-            die "Some process is already listening on $path, aborting";
-        } elsif ($err =~ /^connect: permission denied/i) {
-            die "Cannot access $path, aborting";
-        } elsif (1) { #$err =~ /^connect: connection refused/i) {
-            unlink $path;
-        } elsif ($err !~ /^connect: no such file/i) {
-            die "Cannot bind to $path: $err";
-        }
-
-        setlocale(LC_ALL, $old_locale);
+        create_unix_socket($args{Local});
     }
 
     $args{Listen} //= 1;
@@ -62,7 +42,6 @@ sub url {
 }
 
 1;
-__END__
 # ABSTRACT: HTTP::Daemon over Unix sockets
 
 =head1 SYNOPSIS
