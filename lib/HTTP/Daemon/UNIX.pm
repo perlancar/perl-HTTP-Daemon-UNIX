@@ -1,17 +1,17 @@
 package HTTP::Daemon::UNIX;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
 
 use HTTP::Daemon;
 use IO::Handle::Record; # for peercred()
-use SHARYANTO::IO::Socket::UNIX::Util qw(create_unix_socket);
+use IO::Socket::UNIX::Util qw(create_unix_socket);
 
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
-
-# DATE
-# VERSION
 
 sub new {
     my ($class, %args) = @_;
