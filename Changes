@@ -1,5 +1,10 @@
 Revision history for HTTP-Daemon-UNIX
 
+0.06    2016-08-03 (PERLANCAR)
+
+	- [Bugfix] Update module name.
+
+
 0.06    2014-12-05 (PERLANCAR)
 
 	- No functional changes.
