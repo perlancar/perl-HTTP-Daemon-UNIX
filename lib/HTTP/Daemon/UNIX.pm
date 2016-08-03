@@ -18,7 +18,7 @@ sub new {
 
     # XXX normalize arg case first
 
-    my $sock = SHARYANTO::IO::Socket::UNIX::Util::create_unix_socket(
+    my $sock = IO::Socket::UNIX::Util::create_unix_socket(
         $args{Local});
     bless $sock, $class;
 }
