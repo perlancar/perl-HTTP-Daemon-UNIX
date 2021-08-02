@@ -2,3 +2,4 @@ HTTP-Daemon-UNIX-*
 .build
 *~
 nytprof*
+.DS_Store
